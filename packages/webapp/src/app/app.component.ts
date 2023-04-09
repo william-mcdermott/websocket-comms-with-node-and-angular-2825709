@@ -17,6 +17,11 @@ export class AppComponent implements OnInit {
       {event: 'chatRelay', author: {name: 'Henry', id: 2}, contents: 'Hello Jane I\'m Henry'},
     ]
 
-    this.currentUser = { name: 'Xavier', id: 3 };
+    // this.currentUser = { name: 'Xavier', id: 3 };
+  }
+
+  public connect(userNameInput: HTMLInputElement) {
+    console.log(`Connecting as ${userNameInput.value}`);
+
   }
 }

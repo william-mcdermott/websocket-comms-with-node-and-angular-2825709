@@ -11,6 +11,11 @@
 
 .login-state {
   grid-area: login-state;
+  display: flex;
+  align-items: center;
+  > * {
+    margin: 16px;
+  }
 }
 
 .header {
