@@ -19,6 +19,13 @@ export class UserManager {
             contents: `${name} has joined the chat`
         };
         this.sendToAll(systemNotice);
+
+        const loginMessage = {
+            user,
+            event: 'login'
+        }
+        socket.send(JSON.stringify(loginMessage));
+
         this.sockets.set(socket, user);
     }
 
