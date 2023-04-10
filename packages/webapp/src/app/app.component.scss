@@ -24,6 +24,10 @@
 
 .user-list {
   grid-area: user-list;
+
+  mat-list-item.current-user {
+    background-color: burlywood;
+  }
 }
 
 .chat-area {
@@ -32,6 +36,10 @@
   mat-card {
     max-width: 400px;
     margin-bottom: 15px;
+
+    &.current-user {
+      background-color: burlywood;
+    }
   }
 }
 
@@ -44,6 +52,3 @@
   }
 }
 
-.current-user {
-  background-color: burlywood;
-}
