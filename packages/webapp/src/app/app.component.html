@@ -6,7 +6,7 @@
     <button (click)="connect(userName)" mat-raised-button color="primary">Connect</button>
   </ng-container>
   <ng-container *ngSwitchCase="false">
-    {{ currentUser | json }}
+    <h3>Logged in as: {{ currentUser.name }}</h3>
   </ng-container>
 </div>
 <div class="chat-area">
