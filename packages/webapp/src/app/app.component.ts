@@ -18,13 +18,14 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.appService.chatMessage$.subscribe(msg => this.messages = [...this.messages, msg])
-    this.appService.systemMessage$.subscribe(msg => this.openSnackBar(msg.contents, 'Dismiss'))
+    this.appService.systemMessage$.subscribe((msg) => {
+        if (this.currentUser) {
+          this.openSnackBar(msg.contents, 'Dismiss')
+        }
+    })
     this.appService.user$.subscribe(user => this.currentUser = user);
+    this.appService.users$.subscribe(users => this.users = users);
 
-    this.users = [
-        { name: 'Abe', id: 10 },
-        { name: 'Courtney', id: 7 }
-    ]
   }
 
   public connect(userNameInput: HTMLInputElement) {

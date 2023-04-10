@@ -9,7 +9,8 @@ export class AppService {
     private socket: WebSocketSubject<WsMessage>;
     public user$ = new BehaviorSubject<User>(undefined);
     public chatMessage$ = new Subject<ChatRelayMessage>();
-    public systemMessage$ = new Subject<SystemNotice>()
+    public systemMessage$ = new Subject<SystemNotice>();
+    public users$ = new Subject<User[]>();
 
     public connect(name: string) {
         this.socket = webSocket(`ws://localhost:8080?name=${name}`);
@@ -38,6 +39,7 @@ export class AppService {
             }
             case 'systemNotice': {
                 this.systemMessage$.next(message);
+                this.users$.next(message.loggedInUsers)
                 break;
             }
         }

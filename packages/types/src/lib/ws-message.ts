@@ -15,6 +15,7 @@ export interface ChatRelayMessage {
 
 export interface SystemNotice {
     event: 'systemNotice',
+    loggedInUsers: User[],
     contents: string,
 }
 

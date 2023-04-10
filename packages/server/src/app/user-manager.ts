@@ -14,8 +14,11 @@ export class UserManager {
             name,
             id: currId++
         };
+        this.sockets.set(socket, user);
+        const loggedInUsers = Array.from(this.sockets.values());
         const systemNotice: SystemNotice = {
             event: 'systemNotice',
+            loggedInUsers,
             contents: `${name} has joined the chat`
         };
         this.sendToAll(systemNotice);
@@ -26,17 +29,18 @@ export class UserManager {
         }
         socket.send(JSON.stringify(loginMessage));
 
-        this.sockets.set(socket, user);
     }
 
     remove(socket: WebSocket) {
         const user = this.sockets.get(socket);
+        this.sockets.delete(socket);
+        const loggedInUsers = Array.from(this.sockets.values());
         const systemNotice: SystemNotice = {
             event: 'systemNotice',
+            loggedInUsers,
             contents: `${user.name} has left the chat`
         }
         this.sendToAll(systemNotice);
-        this.sockets.delete(socket);
     }
 
     send(socket: WebSocket, message: WsMessage) {
