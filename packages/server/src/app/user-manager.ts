@@ -30,6 +30,12 @@ export class UserManager {
     }
 
     remove(socket: WebSocket) {
+        const user = this.sockets.get(socket);
+        const systemNotice: SystemNotice = {
+            event: 'systemNotice',
+            contents: `${user.name} has left the chat`
+        }
+        this.sendToAll(systemNotice);
         this.sockets.delete(socket);
     }
 

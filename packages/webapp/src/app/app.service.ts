@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { ChatMessage, ChatRelayMessage, User, WsMessage } from "@websocket/types";
+import { ChatMessage, ChatRelayMessage, SystemNotice, User, WsMessage } from "@websocket/types";
 import { BehaviorSubject, Subject } from "rxjs";
 import { webSocket, WebSocketSubject } from "rxjs/webSocket"
 
@@ -8,7 +8,8 @@ import { webSocket, WebSocketSubject } from "rxjs/webSocket"
 export class AppService {
     private socket: WebSocketSubject<WsMessage>;
     public user$ = new BehaviorSubject<User>(undefined);
-    public chatMessage$ = new Subject<ChatRelayMessage>()
+    public chatMessage$ = new Subject<ChatRelayMessage>();
+    public systemMessage$ = new Subject<SystemNotice>()
 
     public connect(name: string) {
         this.socket = webSocket(`ws://localhost:8080?name=${name}`);
@@ -33,6 +34,10 @@ export class AppService {
             }
             case 'chatRelay': {
                 this.chatMessage$.next(message);
+                break;
+            }
+            case 'systemNotice': {
+                this.systemMessage$.next(message);
                 break;
             }
         }
