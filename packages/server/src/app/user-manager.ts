@@ -5,23 +5,23 @@ import { IncomingMessage } from 'http';
 let currId = 1
 
 export class UserManager {
-    private sockets = new Map<WebSocket, User>();
+    private _sockets = new Map<WebSocket, User>();
 
-    add(socket: WebSocket, request: IncomingMessage) {
+    public add(socket: WebSocket, request: IncomingMessage) {
         const fullURL = new URL(request.headers.host + request.url);
         const name = fullURL.searchParams.get('name');
         const user: User = {
             name,
             id: currId++
         };
-        this.sockets.set(socket, user);
-        const loggedInUsers = Array.from(this.sockets.values());
+        this._sockets.set(socket, user);
+        const loggedInUsers = Array.from(this._sockets.values());
         const systemNotice: SystemNotice = {
             event: 'systemNotice',
             loggedInUsers,
             contents: `${name} has joined the chat`
         };
-        this.sendToAll(systemNotice);
+        this._sendToAll(systemNotice);
 
         const loginMessage = {
             user,
@@ -31,40 +31,35 @@ export class UserManager {
 
     }
 
-    remove(socket: WebSocket) {
-        const user = this.sockets.get(socket);
-        this.sockets.delete(socket);
-        const loggedInUsers = Array.from(this.sockets.values());
+    public remove(socket: WebSocket) {
+        const user = this._sockets.get(socket);
+        this._sockets.delete(socket);
+        const loggedInUsers = Array.from(this._sockets.values());
         const systemNotice: SystemNotice = {
             event: 'systemNotice',
             loggedInUsers,
             contents: `${user.name} has left the chat`
         }
-        this.sendToAll(systemNotice);
+        this._sendToAll(systemNotice);
     }
 
-    send(socket: WebSocket, message: WsMessage) {
-        const data = JSON.stringify(message);
-        socket.send(data);
-    }
-
-    sendToAll(message: WsMessage) {
+    private _sendToAll(message: WsMessage) {
         const data = JSON.stringify(message);
 
-        Array.from(this.sockets.keys()).forEach((socket) => {
+        Array.from(this._sockets.keys()).forEach((socket) => {
             if (socket.readyState === WebSocket.OPEN) {
                 socket.send(data)
             }
         })
     }
 
-    relayChat(from: WebSocket, chatMsg: ChatMessage) {
+    public relayChat(from: WebSocket, chatMsg: ChatMessage) {
         const relayMsg: ChatRelayMessage = {
             event: 'chatRelay',
             contents: chatMsg.contents,
-            author: this.sockets.get(from)
+            author: this._sockets.get(from)
         }
 
-        this.sendToAll(relayMsg);
+        this._sendToAll(relayMsg);
     }
 }
