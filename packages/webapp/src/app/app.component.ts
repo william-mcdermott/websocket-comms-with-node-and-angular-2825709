@@ -9,37 +9,36 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  title = 'I am Angular';
   public messages: ChatRelayMessage[] = [];
   public currentUser: User;
   public users: User[] = [];
 
-  constructor(private appService: AppService, private _snackBar: MatSnackBar) {}
+  constructor(private _appService: AppService, private _snackBar: MatSnackBar) {}
 
   ngOnInit() {
-    this.appService.chatMessage$.subscribe(msg => this.messages = [...this.messages, msg])
-    this.appService.systemMessage$.subscribe((msg) => {
+    this._appService.chatMessage$.subscribe(msg => this.messages = [...this.messages, msg])
+    this._appService.systemMessage$.subscribe((msg) => {
         if (this.currentUser) {
-          this.openSnackBar(msg.contents, 'Dismiss')
+          this._openSnackBar(msg.contents, 'Dismiss')
         }
     })
-    this.appService.user$.subscribe(user => this.currentUser = user);
-    this.appService.users$.subscribe(users => this.users = users);
+    this._appService.user$.subscribe(user => this.currentUser = user);
+    this._appService.users$.subscribe(users => this.users = users);
 
   }
 
-  public connect(userNameInput: HTMLInputElement) {
+  private _connect(userNameInput: HTMLInputElement) {
     const name = userNameInput.value
     console.log(`Connecting as ${userNameInput.value}`);
-    this.appService.connect(name);
+    this._appService.connect(name);
   }
 
   public send(chatInput) {
-    this.appService.send(chatInput.value);
+    this._appService.send(chatInput.value);
     chatInput.value = '';
   }
 
-  private openSnackBar(message: string, action: string) {
+  private _openSnackBar(message: string, action: string) {
     this._snackBar.open(message, action, { duration: 5000 })
   }
 }

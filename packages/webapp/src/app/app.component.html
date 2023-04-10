@@ -3,7 +3,7 @@
     <mat-form-field appearance="standard">
       <input #userName matInput placeholder="What's your name?">
     </mat-form-field>
-    <button (click)="connect(userName)" mat-raised-button color="primary">Connect</button>
+    <button (click)="_connect(userName)" mat-raised-button color="primary">Connect</button>
   </ng-container>
   <ng-container *ngSwitchCase="false">
     <h3>Logged in as: {{ currentUser.name }}</h3>

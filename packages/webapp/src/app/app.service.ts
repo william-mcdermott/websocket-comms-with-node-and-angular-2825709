@@ -6,15 +6,15 @@ import { webSocket, WebSocketSubject } from "rxjs/webSocket"
 @Injectable()
 
 export class AppService {
-    private socket: WebSocketSubject<WsMessage>;
+    private _socket: WebSocketSubject<WsMessage>;
     public user$ = new BehaviorSubject<User>(undefined);
     public chatMessage$ = new Subject<ChatRelayMessage>();
     public systemMessage$ = new Subject<SystemNotice>();
     public users$ = new Subject<User[]>();
 
     public connect(name: string) {
-        this.socket = webSocket(`ws://localhost:8080?name=${name}`);
-        this.socket.subscribe(message => this.onMessageFromServer(message));
+        this._socket = webSocket(`ws://localhost:8080?name=${name}`);
+        this._socket.subscribe(message => this._onMessageFromServer(message));
     }
 
     public send(contents: string) {
@@ -22,10 +22,10 @@ export class AppService {
             event: 'chat',
             contents
         }
-        this.socket.next(chatMsg)
+        this._socket.next(chatMsg)
     }
 
-    private onMessageFromServer(message: WsMessage) {
+    private _onMessageFromServer(message: WsMessage) {
         console.log('From server: ', message);
 
         switch(message.event) {
